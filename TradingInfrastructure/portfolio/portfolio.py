@@ -36,7 +36,7 @@ class Portfolio(object):
         This method is called after every Position modification.
         """
         for ticker in self.positions:
-            pt = self.position[ticker]
+            pt = self.positions[ticker]
             self.unrealised_pnl += pt.unrealised_pnl
             self.realised_pnl += pt.realised_pnl
             self.cur_cash -= pt.cost_basis
@@ -60,18 +60,15 @@ class Portfolio(object):
         """
 
         self._reset_values()
-        if ticker in self.positions:
-            self.positions[ticker].transact_shares(
-                action, quantity, price, commission
-                )
+        if ticker not in self.positions:
             bid, ask = self.price_handler.get_best_bid_ask(ticker)
-            self.positions[ticker].update_market_value(bid,ask)
+            position = Position(action, ticker, quantity, 
+                                price, commission, bid, ask)
+            self.positions[ticker] = position
             self._update_portfolio()
         else:
-            print(
-                "Ticker %s not in the current position list" \
-                "Could not modify a current position" % ticker
-                )
+            print("Ticker %s is already in the positions list " \
+                  "Could not add a new position." % ticker)
 
     def _modify_position(self, action, ticker,
                          quantity, price, commission):
