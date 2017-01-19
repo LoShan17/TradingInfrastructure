@@ -1,0 +1,1 @@
+Initial study over the code presented by Michael Halls-Moore, found in various articles on www.quantstart.com
